@@ -11,6 +11,9 @@
 5. 结果持久化：投票结果持久化存储，提高查询效率
 6. 安全密钥管理：Paillier密钥的安全生成和存储
 7. 投票混淆：通过生成虚假投票增强匿名性
+8. API身份认证：JWT令牌保护管理接口
+9. 完善的日志记录：详细的系统操作日志
+10. 环境变量配置：灵活的配置管理
 
 ## 项目结构
 
@@ -28,6 +31,9 @@ wechat-voting-app/
     ├── paillier.js        # Paillier加密算法
     ├── secure-keys.js     # 安全密钥管理
     ├── obfuscation.js     # 投票混淆功能
+    ├── auth.js            # 身份认证模块
+    ├── logger.js          # 日志记录模块
+    ├── config.js          # 配置管理模块
     └── package.json       # 后端依赖配置
 ```
 
@@ -55,6 +61,15 @@ wechat-voting-app/
    export PAILLIER_PASSPHRASE=your_secure_passphrase
    export ENABLE_OBFUSCATION=true
    export OBFUSCATION_INTERVAL=30000
+   export JWT_SECRET=your_jwt_secret_key
+   ```
+
+   或者创建 `.env` 文件：
+   ```
+   PAILLIER_PASSPHRASE=your_secure_passphrase
+   ENABLE_OBFUSCATION=true
+   OBFUSCATION_INTERVAL=30000
+   JWT_SECRET=your_jwt_secret_key
    ```
 
 4. 启动服务器：
@@ -77,10 +92,12 @@ wechat-voting-app/
 ### 投票创建
 - 管理员可以创建新的投票活动
 - 设置投票主题、描述、选项和截止时间
+- 需要管理员权限（JWT令牌认证）
 
 ### 白名单管理
 - 管理员可以添加或移除白名单用户
 - 只有白名单用户可以参与投票
+- 需要管理员权限（JWT令牌认证）
 
 ### 投票参与
 - 白名单用户可以查看进行中的投票
@@ -114,7 +131,7 @@ wechat-voting-app/
 
 ### 安全密钥管理
 - Paillier密钥对生成后持久化存储
-- 私钥使用密码加密存储
+- 私钥使用AES加密存储（替代了原来的简单XOR加密）
 - 公钥明文存储（符合Paillier算法要求）
 
 ### 投票混淆
@@ -122,11 +139,19 @@ wechat-voting-app/
 - 虚假投票与真实投票使用相同加密方式处理
 - 增强整体匿名性
 
+### API身份认证
+- 使用JWT令牌保护管理接口
+- 管理员操作需要额外的权限验证
+- 用户登录获取访问令牌
+
 ## API接口
+
+### 认证相关
+- `POST /api/login` - 用户登录获取JWT令牌
 
 ### 投票相关
 - `GET /api/votes` - 获取投票列表
-- `POST /api/votes` - 创建投票
+- `POST /api/votes` - 创建投票（需要管理员权限）
 - `GET /api/votes/:id` - 获取投票详情
 - `POST /api/votes/:id/vote` - 提交投票
 - `GET /api/votes/:id/results` - 获取投票结果
@@ -135,9 +160,9 @@ wechat-voting-app/
 - `GET /api/obfuscation/stats` - 获取混淆统计信息
 
 ### 白名单相关
-- `GET /api/whitelist` - 获取白名单
-- `POST /api/whitelist` - 添加用户到白名单
-- `DELETE /api/whitelist/:userId` - 从白名单移除用户
+- `GET /api/whitelist` - 获取白名单（需要管理员权限）
+- `POST /api/whitelist` - 添加用户到白名单（需要管理员权限）
+- `DELETE /api/whitelist/:userId` - 从白名单移除用户（需要管理员权限）
 
 ## 数据库设计
 
@@ -165,6 +190,33 @@ wechat-voting-app/
 ### obfuscation_logs表
 存储混淆日志
 
+## 最近更新内容
+
+### 安全性改进
+- 使用AES加密算法替代简单的XOR操作来保护Paillier私钥
+- 添加JWT令牌身份验证机制来保护API端点
+- 管理员操作需要额外的权限验证
+
+### 数据库优化
+- 为所有表添加了必要的索引以提高查询性能
+- 包括votes_records、whitelist、vote_results等表的复合索引
+
+### 错误处理和日志记录
+- 创建了专门的日志记录模块，支持不同级别的日志记录
+- 为所有API端点添加了适当的错误处理和日志记录
+- 添加了全局错误处理中间件
+
+### 混淆策略改进
+- 实现了更智能的虚假投票生成算法
+- 根据真实投票数量动态调整虚假投票数量
+- 添加了更真实的用户ID生成机制
+- 改进了混淆统计信息收集
+
+### 环境变量配置
+- 创建了统一的配置文件来管理所有环境变量
+- 添加了.env.example文件作为配置示例
+- 使用dotenv库来加载环境变量
+
 ## 注意事项
 
 1. 在生产环境中，需要配置HTTPS以确保数据传输安全
@@ -173,3 +225,4 @@ wechat-voting-app/
 4. 建议使用更完善的用户认证机制
 5. 密钥加密使用的密码应该通过环境变量设置
 6. 投票混淆功能可通过环境变量启用或禁用
+7. 请确保不要将敏感的密钥文件提交到版本控制系统
