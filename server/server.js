@@ -29,18 +29,6 @@ paillier.init().catch(error => {
 // 初始化混淆器
 obfuscation.init();
 
-// 全局错误处理中间件
-app.use((err, req, res, next) => {
-  logError(`服务器错误 - 路径: ${req.path}`, err);
-  res.status(500).json({ error: '服务器内部错误' });
-});
-
-// 404错误处理中间件
-app.use('*', (req, res) => {
-  logWarn(`未找到路径: ${req.path}`);
-  res.status(404).json({ error: '路径未找到' });
-});
-
 // 登录端点 - 用于获取访问令牌
 app.post('/api/login', async (req, res) => {
   try {
@@ -323,6 +311,18 @@ app.delete('/api/whitelist/:userId', authenticateToken, requireAdmin, async (req
     logError(`从白名单移除用户失败 - 用户ID: ${req.params.userId}`, error);
     res.status(500).json({ error: '从白名单移除失败' });
   }
+});
+
+// 404错误处理中间件
+app.use('*', (req, res) => {
+  logWarn(`未找到路径: ${req.path}`);
+  res.status(404).json({ error: '路径未找到' });
+});
+
+// 全局错误处理中间件
+app.use((err, req, res, next) => {
+  logError(`服务器错误 - 路径: ${req.path}`, err);
+  res.status(500).json({ error: '服务器内部错误' });
 });
 
 // 启动服务器
