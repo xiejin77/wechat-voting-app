@@ -1,0 +1,25 @@
+<!-- pages/vote/vote.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">参与投票</text>
+  </view>
+  
+  <view class="votes-list">
+    <view class="vote-item" wx:for="{{votes}}" wx:key="id" bindtap="goToVoteDetail" data-id="{{item.id}}">
+      <view class="vote-header">
+        <text class="vote-title">{{item.title}}</text>
+        <text class="vote-status" wx:if="{{item.status === 'active'}}">进行中</text>
+        <text class="vote-status ended" wx:else>已结束</text>
+      </view>
+      <view class="vote-description">{{item.description}}</view>
+      <view class="vote-meta">
+        <text class="meta-item">截止时间: {{item.endDate}}</text>
+        <text class="meta-item">选项数: {{item.options.length}}</text>
+      </view>
+    </view>
+    
+    <view class="no-data" wx:if="{{votes.length === 0}}">
+      <text>暂无投票活动</text>
+    </view>
+  </view>
+</view>

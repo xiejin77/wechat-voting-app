@@ -1,0 +1,22 @@
+<!-- pages/vote-result/vote-result.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">投票结果</text>
+  </view>
+  
+  <view class="vote-info">
+    <text class="vote-title">{{vote.title}}</text>
+    <text class="vote-description">{{vote.description}}</text>
+  </view>
+  
+  <view class="results">
+    <view class="result-item" wx:for="{{results}}" wx:key="optionId">
+      <view class="option-text">{{item.optionText}}</view>
+      <view class="result-bar">
+        <view class="bar" style="width: {{item.percentage}}%"></view>
+        <text class="percentage">{{item.percentage}}%</text>
+      </view>
+      <view class="count">票数: {{item.count}}</view>
+    </view>
+  </view>
+</view>

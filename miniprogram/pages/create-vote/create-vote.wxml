@@ -1,0 +1,40 @@
+<!-- pages/create-vote/create-vote.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">创建投票</text>
+  </view>
+  
+  <view class="form">
+    <view class="form-item">
+      <text class="label">投票主题</text>
+      <input class="input" placeholder="请输入投票主题" value="{{voteTitle}}" bindinput="onTitleInput" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">投票描述</text>
+      <textarea class="textarea" placeholder="请输入投票描述" value="{{voteDescription}}" bindinput="onDescriptionInput" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">选项设置</text>
+      <view class="options">
+        <view class="option-item" wx:for="{{options}}" wx:key="index">
+          <input class="input option-input" placeholder="选项{{index+1}}" value="{{item.text}}" data-index="{{index}}" bindinput="onOptionInput" />
+          <button class="delete-btn" data-index="{{index}}" bindtap="deleteOption">删除</button>
+        </view>
+        <button class="add-btn" bindtap="addOption">添加选项</button>
+      </view>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">截止时间</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onDateChange">
+        <view class="picker">
+          {{endDate}}
+        </view>
+      </picker>
+    </view>
+    
+    <button class="submit-btn" bindtap="submitVote">创建投票</button>
+  </view>
+</view>

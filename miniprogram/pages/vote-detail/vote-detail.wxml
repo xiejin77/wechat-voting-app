@@ -1,0 +1,31 @@
+<!-- pages/vote-detail/vote-detail.wxml -->
+<view class="container">
+  <view class="vote-header">
+    <text class="vote-title">{{vote.title}}</text>
+    <text class="vote-status" wx:if="{{vote.status === 'active'}}">进行中</text>
+    <text class="vote-status ended" wx:else>已结束</text>
+  </view>
+  
+  <view class="vote-description">{{vote.description}}</view>
+  
+  <view class="vote-meta">
+    <text class="meta-item">截止时间: {{vote.endDate}}</text>
+    <text class="meta-item">选项数: {{vote.options.length}}</text>
+  </view>
+  
+  <view class="options">
+    <radio-group class="radio-group" bindchange="onOptionChange" wx:if="{{vote.status === 'active'}}">
+      <label class="option-item" wx:for="{{vote.options}}" wx:key="id">
+        <radio value="{{item.id}}" checked="{{selectedOption === item.id}}" />
+        <text class="option-text">{{item.text}}</text>
+      </label>
+    </radio-group>
+    
+    <view class="option-item" wx:for="{{vote.options}}" wx:key="id" wx:else>
+      <text class="option-text">{{item.text}}</text>
+    </view>
+  </view>
+  
+  <button class="submit-btn" bindtap="submitVote" wx:if="{{vote.status === 'active'}}">提交投票</button>
+  <button class="result-btn" bindtap="goToResult" wx:else>查看结果</button>
+</view>

@@ -1,0 +1,30 @@
+{
+  "name": "wechat-voting-backend",
+  "version": "1.0.0",
+  "description": "微信小程序匿名投票系统后端服务",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "paillier-bigint": "^3.1.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "wechat",
+    "voting",
+    "paillier",
+    "anonymous"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

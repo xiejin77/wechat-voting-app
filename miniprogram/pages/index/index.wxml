@@ -1,0 +1,12 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">匿名投票系统</text>
+  </view>
+  
+  <view class="content">
+    <button class="btn" bindtap="goToCreateVote">创建投票</button>
+    <button class="btn" bindtap="goToVoteList">参与投票</button>
+    <button class="btn" bindtap="goToWhitelist">白名单管理</button>
+  </view>
+</view>
