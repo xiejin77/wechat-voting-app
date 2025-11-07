@@ -6,7 +6,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    serverUrl: 'https://your-server.com/api', // 后端API地址
+    serverUrl: 'http://localhost:3000/api', // 后端API地址
     userToken: null
   }
 })
